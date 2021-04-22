@@ -46,7 +46,7 @@ namespace Grimoire.Web
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "Grimoire.Web", Version = "v1"});
             });
 
-            services.AddSingleton<IBotService, MockBotService>();
+            services.AddSingleton<IBotService, BotService>();
             services.AddSingleton<UsernameService>();
             services.Configure<LineBotOptions>(Configuration.GetSection(LineBotOptions.LineBot));
             services.AddGrimoire();
