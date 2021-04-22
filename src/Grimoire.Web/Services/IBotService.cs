@@ -1,5 +1,4 @@
 using Grimoire.LineApi.Source;
-using Grimoire.Parser;
 using isRock.LineBot;
 
 namespace Grimoire.Web.Services

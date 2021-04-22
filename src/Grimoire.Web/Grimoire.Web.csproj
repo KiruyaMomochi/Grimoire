@@ -17,7 +17,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Grimoire.LineApi\Grimoire.LineApi.csproj" />
-      <ProjectReference Include="..\Grimoire\Grimoire.csproj" />
     </ItemGroup>
 
 </Project>

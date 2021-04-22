@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Grimoire.LineApi.Source;
-using Grimoire.Parser;
 using isRock.LineBot;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;

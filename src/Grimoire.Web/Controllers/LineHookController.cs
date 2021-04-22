@@ -6,7 +6,6 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Grimoire.LineApi;
 using Grimoire.LineApi.Event;
-using Grimoire.Parser;
 using Grimoire.Web.Services;
 using isRock.LineBot;
 using Microsoft.AspNetCore.Mvc;
