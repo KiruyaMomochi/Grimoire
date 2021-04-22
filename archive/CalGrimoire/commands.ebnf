@@ -1,0 +1,47 @@
+group_command = prefix, command
+
+prefix = "#"
+command = report | remain | hang | reserve
+        | cancel | back | roll | switch | list
+        
+report = report_command report_args
+report_command = "報" | "報刀"
+report_args = [lap order] [status] [comment]
+ 
+remain = remain_command remain_args
+remain_command = "補" | "補償"
+remain_args = report_args
+ 
+hang = hang_command hang_args
+hang_command = "救" | "掛樹"
+hang_args = report_args
+ 
+reserve = reserve_command reserve_args
+reserve_command = "預約" | "約"
+reserve_args = [lap] order [remain] [comment]
+ 
+cancel = cancel_command cancel_args
+cancel_command = "取消預約"
+cancel_args = [lap] order
+ 
+back = back_command back_args
+back_command = "退" | "回退"
+back_args = [delta]
+ 
+roll = roll_command roll_args
+roll_command = "倒"
+roll_args = [delta]
+ 
+switch = switch_command switch_args
+switch_command = "切" | "切換"
+switch_args = [lap] order
+ 
+list = list_command
+list_command = "預約清單"
+
+lap = positive_number
+order = "1" | "2" | "3" | "4" | "5"
+delta = integer
+status = (hang | remain)*
+remain = ("殘", ["刀"]) | ("補", ["償"])
+hang = "掛", ["樹"]

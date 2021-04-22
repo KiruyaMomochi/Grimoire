@@ -1,0 +1,10 @@
+{
+  "id": "325708",
+  "type": "video",
+  "duration": 60000,
+  "contentProvider": {
+    "type": "external",
+    "originalContentUrl": "https://example.com/original.mp4",
+    "previewImageUrl": "https://example.com/preview.jpg"
+  }
+}

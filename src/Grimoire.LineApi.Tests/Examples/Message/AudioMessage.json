@@ -1,0 +1,8 @@
+{
+  "id": "325708",
+  "type": "audio",
+  "duration": 60000,
+  "contentProvider": {
+    "type": "line"
+  }
+}
