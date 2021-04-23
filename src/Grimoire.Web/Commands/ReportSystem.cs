@@ -13,7 +13,7 @@ namespace Grimoire.Web.Commands
     /// <summary>
     /// Report System
     /// </summary>
-    /// TODO: Use a global string builder to represent reply mesage
+    /// TODO: Use a global string builder to represent reply message
     /// TODO: Reply message by return a string
     public class ReportSystem : CommandBase
     {
