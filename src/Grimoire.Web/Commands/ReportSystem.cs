@@ -196,15 +196,14 @@ namespace Grimoire.Web.Commands
 
             if (report == null)
             {
-                report = new Report
+                await _context.Reports.AddAsync(new Report
                 {
                     Order = current.Order,
                     Lap = current.Lap,
                     Comment = Args,
                     IsFailed = true,
                     UserId = UserId
-                };
-                await _context.Reports.AddAsync(report);
+                });
             }
             else
             {
