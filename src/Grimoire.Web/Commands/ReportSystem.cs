@@ -47,7 +47,7 @@ namespace Grimoire.Web.Commands
             var current = await _context.CurrentAsync();
             if (current == null)
             {
-                _botService.ReplyCurrentNotSet(ReplyToken);
+                ReplyCurrentNotSet();
                 return;
             }
 
@@ -73,7 +73,7 @@ namespace Grimoire.Web.Commands
             var current = await _context.CurrentAsync();
             if (current == null)
             {
-                _botService.ReplyCurrentNotSet(ReplyToken);
+                ReplyCurrentNotSet();
                 return;
             }
 
@@ -187,7 +187,7 @@ namespace Grimoire.Web.Commands
             var current = await _context.CurrentAsync();
             if (current == null)
             {
-                _botService.ReplyCurrentNotSet(ReplyToken);
+                ReplyCurrentNotSet();
                 return;
             }
 
@@ -234,14 +234,14 @@ namespace Grimoire.Web.Commands
             var current = await _context.CurrenNoTrackingtAsync();
             if (current == null)
             {
-                _botService.ReplyCurrentNotSet(ReplyToken);
+                ReplyCurrentNotSet();
                 return;
             }
 
             current.Advance(1);
             _context.Currents.Add(current with {Id = 0});
             await _context.SaveChangesAsync();
-            ReplyMessage($"Switched to {current.Lap}-{current.Order}");
+            ReplySwitchedTo(current.Lap, current.Order);
         }
 
         /// <summary>
@@ -253,14 +253,14 @@ namespace Grimoire.Web.Commands
         /// <example>
         /// #回 ~ Switched to Lap 1 Order 4
         /// </example>
-        [GroupCommand("回")]
+        [GroupCommand("回", "回退")]
         public async Task UndoSwitch()
         {
             var last = await _context.Currents.OrderByDescending(c => c.Id).Take(2).ToListAsync();
 
             if (last.Count <= 1)
             {
-                ReplyMessage("Unable to undo.");
+                ReplyMessage("沒有可以回退的記錄.");
                 return;
             }
 
@@ -269,7 +269,7 @@ namespace Grimoire.Web.Commands
 
             _context.Currents.Remove(last1);
             await _context.SaveChangesAsync();
-            ReplyMessage($"Switched to {last2.Lap}-{last2.Order}");
+            ReplySwitchedTo(last2.Lap, last2.Order);
         }
 
         /// <summary>
@@ -290,7 +290,7 @@ namespace Grimoire.Web.Commands
             var next = new Current() {Lap = lap, Order = order};
             _context.Currents.Add(next);
             await _context.SaveChangesAsync();
-            ReplyMessage($"Switched to {next.Lap}-{next.Order}");
+            ReplySwitchedTo(next.Lap, next.Order);
         }
 
         private async Task CancelReportsGeqCurrent()
@@ -298,7 +298,7 @@ namespace Grimoire.Web.Commands
             var current = await _context.CurrentAsync();
             if (current == null)
             {
-                _botService.ReplyCurrentNotSet(ReplyToken);
+                ReplyCurrentNotSet();
                 return;
             }
 
@@ -357,5 +357,16 @@ namespace Grimoire.Web.Commands
         }
 
         private void ReplyMessage(string message) => _botService.ReplyMessage(ReplyToken, message);
+        
+        
+        private void ReplyCurrentNotSet()
+        {
+            ReplyMessage("未設定當前王，請使用 #切 設定後再試.");;
+        }
+
+        private void ReplySwitchedTo(uint lap, uint order)
+        {
+            ReplyMessage($"已切換到第 {lap} 週目第 {order} 王.");
+        }
     }
 }
