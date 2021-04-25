@@ -1,5 +1,7 @@
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
+using Grimoire.LineApi.Event;
 using Grimoire.LineApi.Source;
 using Grimoire.Web.Builder;
 using Grimoire.Web.Models;
@@ -51,7 +53,7 @@ namespace Grimoire.Web.Commands
         [Command("raw")]
         public async Task<TextReply> Raw()
         {
-            return new(MessageEvent.ToString());
+            return new(System.Text.Json.JsonSerializer.Serialize(MessageEvent, new JsonSerializerOptions(){WriteIndented = true}));
         }
     }
 }
