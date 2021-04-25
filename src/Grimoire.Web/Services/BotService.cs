@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Grimoire.LineApi.Source;
@@ -53,9 +54,19 @@ namespace Grimoire.Web.Services
             };
         }
 
-        public async Task<byte[]> ValidateSignatureAsync(Stream stream)
+        private async Task<byte[]> ValidateSignatureAsync(Stream stream)
         {
             return await _decryptor.ComputeHashAsync(stream);
+        }
+        
+        private ReadOnlySpan<byte> ValidateSignature(Stream stream)
+        {
+            return _decryptor.ComputeHash(stream);
+        }
+
+        public bool ValidateSignature(Stream stream, ReadOnlySpan<byte> remoteSignature)
+        {
+            return remoteSignature.SequenceEqual(ValidateSignature(stream));
         }
 
         public void ReplyMessage(string replyToken, string message)

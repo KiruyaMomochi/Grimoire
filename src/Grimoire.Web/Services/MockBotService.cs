@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 using Grimoire.LineApi.Source;
 using isRock.LineBot;
 using Microsoft.Extensions.Logging;
@@ -31,6 +33,11 @@ namespace Grimoire.Web.Services
         public void ReplyMessage(string replyToken, string message)
         {
             _logger.LogInformation("Reply {Message} to {Token}", message, replyToken);
+        }
+
+        public bool ValidateSignature(Stream stream, ReadOnlySpan<byte> remoteSignature)
+        {
+            return true;
         }
 
         public string FetchUsername(BaseSource source)

@@ -23,10 +23,10 @@ namespace Grimoire.Web.Controllers
         private readonly ILogger<LineHookController> _logger;
         // private readonly IUpdateService _updateService;
         private readonly CommandManager _manager;
-        private readonly BotService _botService;
+        private readonly IBotService _botService;
 
         public LineHookController(
-            ILogger<LineHookController> logger, CommandManager commandManager, BotService botService)
+            ILogger<LineHookController> logger, CommandManager commandManager, IBotService botService)
         {
             _logger = logger;
             _manager = commandManager;
@@ -39,9 +39,8 @@ namespace Grimoire.Web.Controllers
             if (!Request.Headers.TryGetValue("x-line-signature", out var signatureValues))
                 return BadRequest("Signature not found");
             
-            var signature = Convert.FromBase64String(signatureValues);
-            var computedSignature = await _botService.ValidateSignatureAsync(Request.Body);
-            if (!computedSignature.SequenceEqual(signature))
+            var result = _botService.ValidateSignature(Request.Body, Convert.FromBase64String(signatureValues));
+            if (!result)
             {
                 _logger.LogWarning("Signature validation failed");
                 return BadRequest("Signature validation failed");
