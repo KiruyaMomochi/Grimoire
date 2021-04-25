@@ -63,6 +63,8 @@ namespace Grimoire.Web.Commands
         [GroupCommand("1", "報", "報刀")]
         public async Task<TextReply> Report()
         {
+            if (!await IsGroupAllowed()) return GroupNotAllowed;
+            
             var current = await _context.CurrentAsync();
             if (current == null)
                 return CurrentNotSet;
