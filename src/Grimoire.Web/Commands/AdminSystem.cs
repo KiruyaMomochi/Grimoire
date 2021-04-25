@@ -31,7 +31,7 @@ namespace Grimoire.Web.Commands
             var source = (GroupSource) MessageEvent.Source;
             var a = await _context.Admins.FindAsync(source.UserId);
             if (a == null)
-                return new TextReply("You are not admin, so you can't use this.");
+                return new TextReply($"You are not admin, so you can't use this.\nYour user id is {source.UserId}.");
             
             var g = await _context.Groups.FindAsync(source.GroupId);
             if (g != null)
