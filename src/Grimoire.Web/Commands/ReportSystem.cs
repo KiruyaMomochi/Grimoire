@@ -43,6 +43,11 @@ namespace Grimoire.Web.Commands
             return g != null;
         }
 
+        public override async Task OnInitializedAsync()
+        {
+            await _usernameService.FetchUsernameAsync(MessageEvent.Source, _context);
+        }
+
         private static readonly TextReply GroupNotAllowed = new("The current group is not allowed, exiting");
         private static readonly TextReply CurrentNotSet = new("未設定當前王，請使用 #切 設定後再試.");
         private static readonly TextReply NoMatchRecords = new("無符合條件的記錄.");
@@ -65,7 +70,6 @@ namespace Grimoire.Web.Commands
             if (current == null)
                 return CurrentNotSet;
             
-            await _usernameService.FetchUsernameAsync(MessageEvent.Source, _context);
             await _context.UpsertReport(current.Lap, current.Order, Args, UserId);
             await _context.SaveChangesAsync();
             AppendHistoryList(current.Lap, current.Order);
@@ -117,7 +121,6 @@ namespace Grimoire.Web.Commands
             if (!await IsGroupAllowed()) return GroupNotAllowed;
             if (!TryParseBoss(out var lap, out var order)) return BuildReply();
 
-            await _usernameService.FetchUsernameAsync(MessageEvent.Source, _context);
             await _context.UpsertReport(lap, order, Args, UserId);
             await _context.SaveChangesAsync();
             AppendHistoryList(lap, order);
