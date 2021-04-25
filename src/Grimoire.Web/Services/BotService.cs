@@ -24,7 +24,7 @@ namespace Grimoire.Web.Services
     public class BotService : IBotService
     {
         private readonly LineBotOptions _config;
-        private readonly HMACSHA256 _decryptor;
+        private readonly HMACSHA256 _decrypt;
         public isRock.LineBot.Bot Bot { get; }
 
         public BotService(IOptions<LineBotOptions> config)
@@ -33,7 +33,7 @@ namespace Grimoire.Web.Services
             if (_config.Secret != null)
             {
                 var secret = Convert.FromBase64String(_config.Secret);
-                _decryptor = new HMACSHA256(secret);
+                _decrypt = new HMACSHA256(secret);
             }
 
             var options = config.Value ?? throw new NullReferenceException(nameof(config));
@@ -56,17 +56,20 @@ namespace Grimoire.Web.Services
 
         private async Task<byte[]> ValidateSignatureAsync(Stream stream)
         {
-            return await _decryptor.ComputeHashAsync(stream);
+            return await _decrypt.ComputeHashAsync(stream);
         }
         
         private ReadOnlySpan<byte> ValidateSignature(Stream stream)
         {
-            return _decryptor.ComputeHash(stream);
+            return _decrypt.ComputeHash(stream);
         }
 
         public bool ValidateSignature(Stream stream, ReadOnlySpan<byte> remoteSignature)
         {
-            return remoteSignature.SequenceEqual(ValidateSignatureAsync(stream).Result);
+            var result = ValidateSignatureAsync(stream).Result;
+            Console.WriteLine(Convert.ToString(result));
+            Console.WriteLine(Convert.ToString(remoteSignature.ToArray()));
+            return remoteSignature.SequenceEqual(result);
         }
 
         public void ReplyMessage(string replyToken, string message)
