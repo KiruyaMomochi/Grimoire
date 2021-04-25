@@ -24,15 +24,12 @@ namespace Grimoire.Web.Commands
         private readonly GrimoireContext _context;
         private readonly UsernameService _usernameService;
         private readonly StringBuilder _replyStringBuilder;
-        private readonly IBotService _botService;
 
-        public ReportSystem(ILogger<ReportSystem> logger, UsernameService usernameService, IBotService botService,
-            GrimoireContext context)
+        public ReportSystem(ILogger<ReportSystem> logger, UsernameService usernameService, GrimoireContext context)
         {
             _logger = logger;
             _context = context;
             _usernameService = usernameService;
-            _botService = botService;
             _replyStringBuilder = new StringBuilder();
         }
 
