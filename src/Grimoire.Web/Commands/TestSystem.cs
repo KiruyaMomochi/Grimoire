@@ -36,9 +36,10 @@ namespace Grimoire.Web.Commands
 
             if (MessageEvent.Source is not GroupSource groupSource) 
                 return new TextReply(sb.ToString().TrimEnd());
-            
-            sb.Append("GroupId: ").AppendLine(groupSource.GroupId);
-            var allow = await _context.Groups.FindAsync(groupSource);
+
+            var groupId = groupSource.GroupId;
+            sb.Append("GroupId: ").AppendLine(groupId);
+            var allow = await _context.Groups.FindAsync(groupId);
             if (allow != null)
                 sb.AppendLine(" - This group is allowed.");
             else
