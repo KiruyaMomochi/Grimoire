@@ -36,15 +36,15 @@ namespace Grimoire.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Post(WebhookEvent we)
        {
-            if (!Request.Headers.TryGetValue("x-line-signature", out var signatureValues))
-                return BadRequest("Signature not found");
-            
-            var result = _botService.ValidateSignature(Request.Body, Convert.FromBase64String(signatureValues));
-            if (!result)
-            {
-                _logger.LogWarning("Signature validation failed");
-                return BadRequest("Signature validation failed");
-            }
+            // if (!Request.Headers.TryGetValue("x-line-signature", out var signatureValues))
+            //     return BadRequest("Signature not found");
+            //
+            // var result = _botService.ValidateSignature(Request.Body, Convert.FromBase64String(signatureValues));
+            // if (!result)
+            // {
+            //     _logger.LogWarning("Signature validation failed");
+            //     return BadRequest("Signature validation failed");
+            // }
 
             foreach (var e in we.Events) 
                 await _manager.HandleWebhookEvent(e);
