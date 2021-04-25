@@ -12,5 +12,13 @@ namespace Grimoire.Web.Builder
             manager.CollectInvokers(builder.ApplicationServices);
             return builder;
         }
+        
+        public static IApplicationBuilder UseBot(this IApplicationBuilder builder)
+        {
+            var manager = builder.ApplicationServices.GetRequiredService<CommandManager>();
+            var bot = builder.ApplicationServices.GetRequiredService<IBotService>();
+            manager.Bot = bot;
+            return builder;
+        }
     }
 }

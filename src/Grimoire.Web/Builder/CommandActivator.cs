@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using System.Threading.Tasks;
 using Grimoire.Web.Commands;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -9,7 +10,13 @@ namespace Grimoire.Web.Builder
     {
         public Type Type;
         public MethodInfo Method;
+
+        public delegate Task AsyncLifecycleDelegate(CommandBase service);
+        
+        public AsyncLifecycleDelegate OnInitializedAsync;
+        public AsyncLifecycleDelegate OnAfterCommandAsync;
+        
         public Action<CommandBase, CommandContext> SetCommandContext;
-        public ObjectFactory Activator;
+        public ObjectFactory Factory;
     }
 }

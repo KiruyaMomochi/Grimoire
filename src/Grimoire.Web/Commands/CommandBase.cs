@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Grimoire.LineApi.Event;
 using Grimoire.LineApi.Message;
 
@@ -6,10 +7,10 @@ namespace Grimoire.Web.Commands
 {
     public class CommandContext
     {
-        public BaseEvent Event {get; init; }
+        public BaseEvent Event { get; init; }
         public string Args { get; set; }
     }
-    
+
     public abstract class CommandBase
     {
         private CommandContext _commandContext;
@@ -20,6 +21,16 @@ namespace Grimoire.Web.Commands
         {
             get => _commandContext;
             set => _commandContext = value ?? throw new ArgumentNullException(nameof(value));
+        }
+
+        public virtual Task OnInitializedAsync()
+        {
+            return Task.CompletedTask;
+        }
+
+        public virtual Task OnAfterCommandAsync()
+        {
+            return Task.CompletedTask;
         }
 
         public BaseEvent BaseEvent => CommandContext.Event;

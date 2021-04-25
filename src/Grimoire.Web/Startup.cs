@@ -37,18 +37,22 @@ namespace Grimoire.Web
             var connectionString = Configuration.GetConnectionString("PostgreSQL");
             
             services.AddControllers();
-            services.AddDbContext<GrimoireContext>(
-                options => 
-                    options
-                        .UseNpgsql(connectionString));
+            // services.AddDbContext<GrimoireContext>(
+            //     options => 
+            //         options
+            //             .UseNpgsql(connectionString));
+
+            services.AddDbContext<GrimoireContext>(options => options.UseInMemoryDatabase("grimoire"));
+            
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "Grimoire.Web", Version = "v1"});
             });
 
-            services.AddSingleton<IBotService, BotService>();
             services.AddSingleton<UsernameService>();
             services.Configure<LineBotOptions>(Configuration.GetSection(LineBotOptions.LineBot));
+            
+            services.AddSingleton<IBotService, MockBotService>();
             services.AddGrimoire();
         }
 
@@ -70,7 +74,7 @@ namespace Grimoire.Web
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
-            app.UseGrimoire();
+            app.UseGrimoire().UseBot();
             
             // if (config.Value.WebHook != null)
             // {

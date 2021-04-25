@@ -16,6 +16,7 @@ namespace Grimoire.Web.Models
         public DbSet<Current> Currents { get; set; }
         public DbSet<Report> Reports { get; set; }
         public DbSet<History> Histories { get; set; }
+        public DbSet<Group> Groups { get; set; }
 
         public GrimoireContext(DbContextOptions<GrimoireContext> options) : base(options)
         {

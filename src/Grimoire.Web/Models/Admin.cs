@@ -9,7 +9,7 @@ namespace Grimoire.Web.Models
 {
     public record Admin
     {
-        public int Id { get; init; }
+        [Key]
         public string UserId { get; init; }
         public User User { get; init; }
     }
