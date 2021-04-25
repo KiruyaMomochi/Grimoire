@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Grimoire.LineApi;
@@ -21,23 +23,30 @@ namespace Grimoire.Web.Controllers
         private readonly ILogger<LineHookController> _logger;
         // private readonly IUpdateService _updateService;
         private readonly CommandManager _manager;
+        private readonly BotService _botService;
 
         public LineHookController(
-            ILogger<LineHookController> logger, CommandManager commandManager)
+            ILogger<LineHookController> logger, CommandManager commandManager, BotService botService)
         {
             _logger = logger;
             _manager = commandManager;
+            _botService = botService;
         }
 
         [HttpPost]
         public async Task<IActionResult> Post(WebhookEvent we)
        {
-            if (!Request.Headers.TryGetValue("x-line-signature", out var signature))
+            if (!Request.Headers.TryGetValue("x-line-signature", out var signatureValues))
                 return BadRequest("Signature not found");
             
-            _logger.LogWarning("x-line-signature: {Signature}", signature);
-            // TODO: Signature verification
-            
+            var signature = Convert.FromBase64String(signatureValues);
+            var computedSignature = await _botService.ValidateSignatureAsync(Request.Body);
+            if (!computedSignature.SequenceEqual(signature))
+            {
+                _logger.LogWarning("Signature validation failed");
+                return BadRequest("Signature validation failed");
+            }
+
             foreach (var e in we.Events) 
                 await _manager.HandleWebhookEvent(e);
             
