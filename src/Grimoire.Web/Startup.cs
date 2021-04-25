@@ -37,12 +37,12 @@ namespace Grimoire.Web
             var connectionString = Configuration.GetConnectionString("PostgreSQL");
             
             services.AddControllers();
-            // services.AddDbContext<GrimoireContext>(
-            //     options => 
-            //         options
-            //             .UseNpgsql(connectionString));
+            services.AddDbContext<GrimoireContext>(
+                options => 
+                    options
+                        .UseNpgsql(connectionString));
 
-            services.AddDbContext<GrimoireContext>(options => options.UseInMemoryDatabase("grimoire"));
+            // services.AddDbContext<GrimoireContext>(options => options.UseInMemoryDatabase("grimoire"));
             
             services.AddSwaggerGen(c =>
             {
@@ -52,7 +52,7 @@ namespace Grimoire.Web
             services.AddSingleton<UsernameService>();
             services.Configure<LineBotOptions>(Configuration.GetSection(LineBotOptions.LineBot));
             
-            services.AddSingleton<IBotService, MockBotService>();
+            services.AddSingleton<IBotService, BotService>();
             services.AddGrimoire();
         }
 
