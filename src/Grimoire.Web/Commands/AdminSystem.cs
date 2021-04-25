@@ -1,5 +1,9 @@
 using System.Text;
+using System.Threading.Tasks;
+using Grimoire.LineApi.Source;
+using Grimoire.Web.Builder;
 using Grimoire.Web.Models;
+using Grimoire.Web.Replies;
 using Grimoire.Web.Services;
 using Microsoft.Extensions.Logging;
 
@@ -20,7 +24,22 @@ namespace Grimoire.Web.Commands
             _usernameService = usernameService;
             _botService = botService;
         }
-        
-        
+
+        [GroupCommand("add")]
+        public async Task<TextReply> AddGroup()
+        {
+            var source = (GroupSource) MessageEvent.Source;
+            var a = await _context.Admins.FindAsync(source.UserId);
+            if (a == null)
+                return new TextReply("You are not admin, so you can't use this.");
+            
+            var g = await _context.Groups.FindAsync(source.GroupId);
+            if (g != null)
+                return new TextReply("This group is already in the allow list.");
+
+            await _context.Groups.AddAsync(new Group() {GroupId = source.GroupId});
+            await _context.SaveChangesAsync();
+            return new TextReply("Done. Use #ping to validate.");
+        }
     }
 }

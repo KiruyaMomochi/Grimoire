@@ -37,7 +37,19 @@ namespace Grimoire.Web.Commands
         {
             var source = (GroupSource) MessageEvent.Source;
             var g = await _context.Groups.FindAsync(source.GroupId);
-            return g != null;
+            if (g != null)
+                return true;
+
+            _replyStringBuilder.AppendLine("The current group is not allowed, exiting.");
+            _replyStringBuilder.AppendLine($"The group id is {source.GroupId}");
+
+            var a = await _context.Admins.FindAsync(source.UserId);
+            if (a != null)
+                _replyStringBuilder.AppendLine("You can #add this group to allow list.");
+            else
+                _replyStringBuilder.AppendLine("Admins can #add this group to allow list.");
+            
+            return false;
         }
 
         public override async Task OnInitializedAsync()
@@ -45,7 +57,6 @@ namespace Grimoire.Web.Commands
             await _usernameService.FetchUsernameAsync(MessageEvent.Source, _context);
         }
 
-        private static readonly TextReply GroupNotAllowed = new("The current group is not allowed, exiting");
         private static readonly TextReply CurrentNotSet = new("未設定當前王，請使用 #切 設定後再試.");
         private static readonly TextReply NoMatchRecords = new("無符合條件的記錄.");
         private static readonly TextReply NoHistory = new("沒有可以回退的記錄.");
@@ -63,16 +74,16 @@ namespace Grimoire.Web.Commands
         [GroupCommand("1", "報", "報刀")]
         public async Task<TextReply> Report()
         {
-            if (!await IsGroupAllowed()) return GroupNotAllowed;
-            
+            if (!await IsGroupAllowed()) return BuildReply();
+
             var current = await _context.CurrentAsync();
             if (current == null)
                 return CurrentNotSet;
-            
+
             await _context.UpsertReport(current.Lap, current.Order, Args, UserId);
             await _context.SaveChangesAsync();
             AppendHistoryList(current.Lap, current.Order);
-            
+
             return BuildReply();
         }
 
@@ -89,8 +100,8 @@ namespace Grimoire.Web.Commands
         [GroupCommand("取消", "取消報刀")]
         public async Task<TextReply> CancelReport()
         {
-            if (!await IsGroupAllowed()) return GroupNotAllowed;
-            
+            if (!await IsGroupAllowed()) return BuildReply();
+
             var current = await _context.CurrentAsync();
             if (current == null)
                 return CurrentNotSet;
@@ -100,7 +111,7 @@ namespace Grimoire.Web.Commands
 
             _replyStringBuilder.AppendLine(report == null ? "沒有記錄." : $"已移除記錄 {report.Comment}");
             AppendHistoryList(current.Lap, current.Order);
-            
+
             return BuildReply();
         }
 
@@ -117,7 +128,7 @@ namespace Grimoire.Web.Commands
         [GroupCommand("2", "預約")]
         public async Task<TextReply> Reserve()
         {
-            if (!await IsGroupAllowed()) return GroupNotAllowed;
+            if (!await IsGroupAllowed()) return BuildReply();
             if (!TryParseBoss(out var lap, out var order)) return BuildReply();
 
             await _context.UpsertReport(lap, order, Args, UserId);
@@ -144,7 +155,7 @@ namespace Grimoire.Web.Commands
         [GroupCommand("取消預約")]
         public async Task<TextReply> CancelReserve()
         {
-            if (!await IsGroupAllowed()) return GroupNotAllowed;
+            if (!await IsGroupAllowed()) return BuildReply();
             // This is slow
             if (string.IsNullOrEmpty(Args)) return await CancelReportsGeqCurrent();
 
@@ -165,15 +176,16 @@ namespace Grimoire.Web.Commands
                 lap = order = 0;
                 return false;
             }
+
             if (args.Length == 1)
             {
                 _replyStringBuilder.Append("除週目外，還需指定目標怪物.");
                 lap = order = 0;
                 return false;
             }
-            
+
             CommandContext.Args = args.Length >= 3 ? args[2] : string.Empty;
-            
+
             if (!uint.TryParse(args[0], out lap))
             {
                 _replyStringBuilder.Append($"週目 {args[0]} 不能被轉換為數字.");
@@ -205,8 +217,8 @@ namespace Grimoire.Web.Commands
         [GroupCommand("救")]
         public async Task<TextReply> Save()
         {
-            if (!await IsGroupAllowed()) return GroupNotAllowed;
-            
+            if (!await IsGroupAllowed()) return BuildReply();
+
             var current = await _context.CurrentAsync();
             if (current == null) return CurrentNotSet;
 
@@ -250,7 +262,7 @@ namespace Grimoire.Web.Commands
         [GroupCommand("倒")]
         public async Task<TextReply> SwitchNext()
         {
-            if (!await IsGroupAllowed()) return GroupNotAllowed;
+            if (!await IsGroupAllowed()) return BuildReply();
             var current = await _context.CurrenNoTrackingtAsync();
             if (current == null) return CurrentNotSet;
 
@@ -272,7 +284,7 @@ namespace Grimoire.Web.Commands
         [GroupCommand("回", "回退")]
         public async Task<TextReply> UndoSwitch()
         {
-            if (!await IsGroupAllowed()) return GroupNotAllowed;
+            if (!await IsGroupAllowed()) return BuildReply();
             var last = await _context.Currents.OrderByDescending(c => c.Id).Take(2).ToListAsync();
 
             if (last.Count <= 1) return NoHistory;
@@ -297,7 +309,7 @@ namespace Grimoire.Web.Commands
         [GroupCommand("切")]
         public async Task<TextReply> Switch()
         {
-            if (!await IsGroupAllowed()) return GroupNotAllowed;
+            if (!await IsGroupAllowed()) return BuildReply();
             if (!TryParseBoss(out var lap, out var order)) return BuildReply();
 
             var next = new Current {Lap = lap, Order = order};
@@ -321,11 +333,11 @@ namespace Grimoire.Web.Commands
 
             _context.Reports.RemoveRange(reports);
             await _context.SaveChangesAsync();
-            
+
             var removed = string.Join(' ', reports.Select(x => $"{x.Lap}-{x.Order}"));
             return removed == "" ? NoMatchRecords : new TextReply($"已移除: {removed}.");
         }
-        
+
 
         private string[] ParseArgs(int count)
         {
@@ -353,7 +365,7 @@ namespace Grimoire.Web.Commands
                 idx++;
                 if (idx == 1)
                     _replyStringBuilder.Insert(0, $"報刀清單 - 目前是{lap}週{order}王\n");
-                
+
                 _replyStringBuilder.AppendFormat("{0,2:D}. ", idx);
                 _replyStringBuilder.Append(report.User != null ? report.User.LineName : report.UserId[..6]);
                 if (report.IsFailed)
@@ -367,8 +379,8 @@ namespace Grimoire.Web.Commands
                 _replyStringBuilder.Append(lap).Append('週').Append(order).Append('王').Append(" 無報刀記錄");
         }
 
-        private TextReply BuildReply() => new (_replyStringBuilder.ToString().Trim());
-        
+        private TextReply BuildReply() => new(_replyStringBuilder.ToString().Trim());
+
         private static TextReply SwitchedTo(uint lap, uint order)
             => new($"已切換到第 {lap} 週目第 {order} 王.");
     }
