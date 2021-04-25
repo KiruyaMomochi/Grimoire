@@ -47,5 +47,11 @@ namespace Grimoire.Web.Commands
 
             return new TextReply(sb.ToString().TrimEnd());
         }
+        
+        [Command("raw")]
+        public async Task<TextReply> Raw()
+        {
+            return new(MessageEvent.ToString());
+        }
     }
 }

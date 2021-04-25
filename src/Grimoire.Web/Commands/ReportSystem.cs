@@ -364,7 +364,7 @@ namespace Grimoire.Web.Commands
             {
                 idx++;
                 if (idx == 1)
-                    _replyStringBuilder.Insert(0, $"報刀清單 - 目前是{lap}週{order}王\n");
+                    _replyStringBuilder.Insert(0, $"報刀清單 - 目前是 {lap} 週 {order} 王\n");
 
                 _replyStringBuilder.AppendFormat("{0,2:D}. ", idx);
                 _replyStringBuilder.Append(report.User != null ? report.User.LineName : report.UserId[..6]);
@@ -376,7 +376,7 @@ namespace Grimoire.Web.Commands
             }
 
             if (idx == 0)
-                _replyStringBuilder.Append(lap).Append('週').Append(order).Append('王').Append(" 無報刀記錄");
+                _replyStringBuilder.Append(lap).Append(" 週 ").Append(order).Append(" 王 ").Append(" 無報刀記錄");
         }
 
         private TextReply BuildReply() => new(_replyStringBuilder.ToString().Trim());
