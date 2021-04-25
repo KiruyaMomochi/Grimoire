@@ -67,8 +67,8 @@ namespace Grimoire.Web.Services
         public bool ValidateSignature(Stream stream, ReadOnlySpan<byte> remoteSignature)
         {
             var result = ValidateSignatureAsync(stream).Result;
-            Console.WriteLine(Convert.ToString(result));
-            Console.WriteLine(Convert.ToString(remoteSignature.ToArray()));
+            Console.WriteLine(BitConverter.ToString(result));
+            Console.WriteLine(BitConverter.ToString(remoteSignature.ToArray()));
             return remoteSignature.SequenceEqual(result);
         }
 
