@@ -32,9 +32,12 @@ namespace Grimoire.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Post(WebhookEvent we)
        {
+            if (!Request.Headers.TryGetValue("x-line-signature", out var signature))
+                return BadRequest("Signature not found");
+            
+            _logger.LogWarning("x-line-signature: {Signature}", signature);
             // TODO: Signature verification
-            // _logger.LogWarning("x-line-signature: {Signature}", Request.Headers["x-line-signature"]);
-            // await _updateService.HandleWebhookEvent(e);
+            
             foreach (var e in we.Events) 
                 await _manager.HandleWebhookEvent(e);
             
