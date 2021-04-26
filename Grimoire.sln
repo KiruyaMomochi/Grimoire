@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grimoire.LineApi", "src\Gri
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grimoire.LineApi.Tests", "src\Grimoire.LineApi.Tests\Grimoire.LineApi.Tests.csproj", "{6678DA2B-078F-43BF-AF1F-B838DF68E740}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grimoire.Utils", "Grimoire.Utils\Grimoire.Utils.csproj", "{1C1D8A1A-4634-4B5D-8406-83CD04B057D7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{6678DA2B-078F-43BF-AF1F-B838DF68E740}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6678DA2B-078F-43BF-AF1F-B838DF68E740}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6678DA2B-078F-43BF-AF1F-B838DF68E740}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C1D8A1A-4634-4B5D-8406-83CD04B057D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C1D8A1A-4634-4B5D-8406-83CD04B057D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C1D8A1A-4634-4B5D-8406-83CD04B057D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C1D8A1A-4634-4B5D-8406-83CD04B057D7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

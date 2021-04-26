@@ -40,7 +40,7 @@ namespace Grimoire.Web.Services
             var result = await ValidateSignatureAsync(stream);
             Console.WriteLine(BitConverter.ToString(result));
             Console.WriteLine(BitConverter.ToString(remoteSignature));
-            return remoteSignature.SequenceEqual(result);
+            return Utils.Memory.UnsafeCompare(result, remoteSignature);
         }
     }
 }

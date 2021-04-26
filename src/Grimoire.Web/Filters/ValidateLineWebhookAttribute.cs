@@ -23,7 +23,7 @@ namespace Grimoire.Web.Filters
         }
     }
 
-    public class ValidateLineWebhookServiceFilter : IActionFilter
+    public class ValidateLineWebhookServiceFilter : IAsyncActionFilter
     {
         private readonly LineSignatureService _validator;
 
@@ -39,8 +39,14 @@ namespace Grimoire.Web.Filters
             if (!_validator.ValidateSignature(request.Body, signature)) context.Result = new ForbidResult();
         }
 
-        public void OnActionExecuted(ActionExecutedContext context)
+        public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
+            var request = context.HttpContext.Request;
+            var signature = Convert.FromBase64String(request.Headers["x-line-signature"]);
+            if (await _validator.ValidateSignatureAsync(request.Body, signature))
+                await next();
+            else
+                context.Result = new ForbidResult();
         }
     }
 }
