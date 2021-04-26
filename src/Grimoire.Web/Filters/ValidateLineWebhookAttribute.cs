@@ -31,14 +31,7 @@ namespace Grimoire.Web.Filters
         {
             _validator = validator;
         }
-
-        public void OnActionExecuting(ActionExecutingContext context)
-        {
-            var request = context.HttpContext.Request;
-            var signature = Convert.FromBase64String(request.Headers["x-line-signature"]);
-            if (!_validator.ValidateSignature(request.Body, signature)) context.Result = new ForbidResult();
-        }
-
+        
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             var request = context.HttpContext.Request;
