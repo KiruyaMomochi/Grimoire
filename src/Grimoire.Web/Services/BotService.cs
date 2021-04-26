@@ -54,24 +54,6 @@ namespace Grimoire.Web.Services
             };
         }
 
-        private async Task<byte[]> ValidateSignatureAsync(Stream stream)
-        {
-            return await _decrypt.ComputeHashAsync(stream);
-        }
-        
-        private ReadOnlySpan<byte> ValidateSignature(Stream stream)
-        {
-            return _decrypt.ComputeHash(stream);
-        }
-
-        public bool ValidateSignature(Stream stream, ReadOnlySpan<byte> remoteSignature)
-        {
-            var result = ValidateSignatureAsync(stream).Result;
-            Console.WriteLine(BitConverter.ToString(result));
-            Console.WriteLine(BitConverter.ToString(remoteSignature.ToArray()));
-            return remoteSignature.SequenceEqual(result);
-        }
-
         public void ReplyMessage(string replyToken, string message)
         {
             Bot.ReplyMessage(replyToken, message);
