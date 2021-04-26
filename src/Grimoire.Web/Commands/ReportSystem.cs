@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ using Grimoire.Web.Replies;
 using Grimoire.Web.Services;
 using isRock.LineBot;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Logging;
 
 namespace Grimoire.Web.Commands
@@ -317,6 +319,32 @@ namespace Grimoire.Web.Commands
             await _context.SaveChangesAsync();
             return SwitchedTo(next.Lap, next.Order);
         }
+        
+        // TODO: Temp impl!
+        [GroupCommand("預約清單")]
+        public async Task<TextReply> ReportList()
+        {
+            if (!await IsGroupAllowed()) return BuildReply();
+
+            var current = await _context.CurrenNoTrackingtAsync();
+            if (current == null) return CurrentNotSet;
+
+            var group = _context.Reports
+                .AsNoTracking()
+                .Where(r => r.Lap > current.Lap || r.Lap == current.Lap && r.Order >= current.Order)
+                .OrderBy(r => r.Lap)
+                .ThenBy(r => r.Order)
+                .ThenBy(r => r.Id)
+                .ToList()
+                .GroupBy(r => (r.Lap, r.Order), r => r);
+            
+            foreach (var g in group)
+            {
+                AppendReportListCore(g, $"{g.Key.Lap} 週 {g.Key.Order} 王", "");
+            }
+
+            return BuildReply();
+        }
 
         private async Task<TextReply> CancelReportsGeqCurrent()
         {
@@ -356,15 +384,18 @@ namespace Grimoire.Web.Commands
         private void AppendHistoryList(uint lap, uint order, string prefix = "")
         {
             var reportsList = _context.ReportsList(lap, order);
-
             _replyStringBuilder.Append(prefix);
+            AppendReportListCore(reportsList, $"報刀清單 - 目前是 {lap} 週 {order} 王\n", $"{lap} 週 {order} 王 無報刀記錄");
+        }
 
+        private void AppendReportListCore(IEnumerable<Report> reportsList, string hasReport, string noReport)
+        {
             var idx = 0;
             foreach (var report in reportsList)
             {
                 idx++;
                 if (idx == 1)
-                    _replyStringBuilder.Insert(0, $"報刀清單 - 目前是 {lap} 週 {order} 王\n");
+                    _replyStringBuilder.AppendLine(hasReport);
 
                 _replyStringBuilder.AppendFormat("{0,2:D}. ", idx);
                 _replyStringBuilder.Append(report.User != null ? report.User.LineName : report.UserId[..6]);
@@ -376,7 +407,7 @@ namespace Grimoire.Web.Commands
             }
 
             if (idx == 0)
-                _replyStringBuilder.Append(lap).Append(" 週 ").Append(order).Append(" 王 ").Append(" 無報刀記錄");
+                _replyStringBuilder.AppendLine(noReport);
         }
 
         private TextReply BuildReply() => new(_replyStringBuilder.ToString().Trim());
