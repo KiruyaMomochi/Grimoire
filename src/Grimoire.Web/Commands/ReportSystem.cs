@@ -335,6 +335,7 @@ namespace Grimoire.Web.Commands
                 .OrderBy(r => r.Lap)
                 .ThenBy(r => r.Order)
                 .ThenBy(r => r.Id)
+                .Include(r => r.User)
                 .ToList()
                 .GroupBy(r => (r.Lap, r.Order), r => r);
             
