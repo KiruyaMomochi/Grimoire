@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Grimoire.Web.Commands
 {
-    public class TestSystem: CommandBase
+    public class TestSystem : CommandBase
     {
         private readonly ILogger<TestSystem> _logger;
         private readonly GrimoireContext _context;
@@ -27,7 +27,7 @@ namespace Grimoire.Web.Commands
         {
             var sb = new StringBuilder();
             sb.AppendLine("Pong.");
-            
+
             var userId = MessageEvent.Source.UserId;
             sb.Append("UserId: ").AppendLine(userId);
             var admin = await _context.Admins.FindAsync(userId);
@@ -36,7 +36,7 @@ namespace Grimoire.Web.Commands
             else
                 sb.AppendLine(" - You are not admin.");
 
-            if (MessageEvent.Source is not GroupSource groupSource) 
+            if (MessageEvent.Source is not GroupSource groupSource)
                 return new TextReply(sb.ToString().TrimEnd());
 
             var groupId = groupSource.GroupId;
@@ -49,11 +49,13 @@ namespace Grimoire.Web.Commands
 
             return new TextReply(sb.ToString().TrimEnd());
         }
-        
+
         [Command("raw")]
-        public async Task<TextReply> Raw()
+        public ValueTask<TextReply> Raw()
         {
-            return new(System.Text.Json.JsonSerializer.Serialize(MessageEvent, new JsonSerializerOptions(){WriteIndented = true}));
+            return new(new TextReply(
+                JsonSerializer.Serialize(MessageEvent,
+                    new JsonSerializerOptions() {WriteIndented = true})));
         }
     }
 }

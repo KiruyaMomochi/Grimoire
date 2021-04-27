@@ -12,11 +12,17 @@ using Grimoire.Web.Commands;
 using Grimoire.Web.Common;
 using Grimoire.Web.Replies;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Grimoire.Web.Services
 {
     public class CommandManager
     {
+        public CommandManager(ILogger<CommandManager> logger)
+        {
+            _logger = logger;
+        }
+        
         public delegate Task CommandInvoker(MessageEvent args, string command);
 
         private readonly Dictionary<string, CommandActivator> _groupCommandActivators = new();
@@ -26,6 +32,7 @@ namespace Grimoire.Web.Services
         private readonly Dictionary<string, CommandActivator> _roomCommandActivators = new();
         private readonly Dictionary<string, CommandInvoker> _roomCommandInvokers = new();
         private readonly char _startSymbol = '#';
+        private readonly ILogger<CommandManager> _logger;
         public IBotService Bot { get; set; }
 
         /// <summary>
@@ -210,7 +217,8 @@ namespace Grimoire.Web.Services
             if (e is not MessageEvent {Message: TextMessage textMessage} messageEvent) return;
             if (!textMessage.Text.StartsWith(_startSymbol))
                 return;
-
+            
+            _logger.LogInformation("{TextMessage}", textMessage.ToString());
             var (command, args) = SplitText(textMessage.Text[1..]);
 
             switch (messageEvent.Source)

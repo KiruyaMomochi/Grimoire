@@ -54,7 +54,7 @@ namespace Grimoire.Web
             services.AddSingleton<UsernameService>();
             services.Configure<LineBotOptions>(Configuration.GetSection(LineBotOptions.LineBot));
             
-            services.AddSingleton<IBotService, BotService>();
+            services.AddSingleton<IBotService, MockBotService>();
             services.AddSingleton<LineSignatureService>();
             services.AddSingleton<ValidateLineWebhookServiceFilter>();
             services.AddGrimoire();
@@ -76,9 +76,9 @@ namespace Grimoire.Web
 
             app.UseAuthorization();
 
-            app.UseMiddleware<LineVerifyMiddleware>();
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
-
+            app.Map("/LineHook", builder => builder.UseMiddleware<LineEndpoint>());
+            
+            // app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
             app.UseGrimoire().UseBot();
             
             // if (config.Value.WebHook != null)
