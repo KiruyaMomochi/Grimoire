@@ -54,7 +54,7 @@ namespace Grimoire.Web
             services.AddSingleton<UsernameService>();
             services.Configure<LineBotOptions>(Configuration.GetSection(LineBotOptions.LineBot));
             
-            services.AddSingleton<IBotService, MockBotService>();
+            services.AddSingleton<IBotService, BotService>();
             services.AddSingleton<LineSignatureService>();
             services.AddSingleton<ValidateLineWebhookServiceFilter>();
             services.AddGrimoire();

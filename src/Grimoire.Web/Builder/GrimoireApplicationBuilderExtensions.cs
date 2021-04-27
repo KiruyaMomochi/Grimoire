@@ -9,6 +9,7 @@ namespace Grimoire.Web.Builder
         public static IApplicationBuilder UseGrimoire(this IApplicationBuilder builder)
         {
             var manager = builder.ApplicationServices.GetRequiredService<CommandManager>();
+            manager.UseLogging(builder.ApplicationServices);
             manager.CollectInvokers(builder.ApplicationServices);
             return builder;
         }

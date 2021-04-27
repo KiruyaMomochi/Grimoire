@@ -18,11 +18,6 @@ namespace Grimoire.Web.Services
 {
     public class CommandManager
     {
-        public CommandManager(ILogger<CommandManager> logger)
-        {
-            _logger = logger;
-        }
-        
         public delegate Task CommandInvoker(MessageEvent args, string command);
 
         private readonly Dictionary<string, CommandActivator> _groupCommandActivators = new();
@@ -32,7 +27,7 @@ namespace Grimoire.Web.Services
         private readonly Dictionary<string, CommandActivator> _roomCommandActivators = new();
         private readonly Dictionary<string, CommandInvoker> _roomCommandInvokers = new();
         private readonly char _startSymbol = '#';
-        private readonly ILogger<CommandManager> _logger;
+        private ILogger<CommandManager> _logger;
         public IBotService Bot { get; set; }
 
         /// <summary>
@@ -218,7 +213,7 @@ namespace Grimoire.Web.Services
             if (!textMessage.Text.StartsWith(_startSymbol))
                 return;
             
-            _logger.LogInformation("{TextMessage}", textMessage.ToString());
+            _logger?.LogInformation("{TextMessage}", textMessage.ToString());
             var (command, args) = SplitText(textMessage.Text[1..]);
 
             switch (messageEvent.Source)
@@ -238,6 +233,11 @@ namespace Grimoire.Web.Services
                 default:
                     throw new ArgumentOutOfRangeException(nameof(e));
             }
+        }
+
+        public void UseLogging(IServiceProvider services)
+        {
+            _logger ??= services.GetRequiredService<ILogger<CommandManager>>();
         }
     }
 }
