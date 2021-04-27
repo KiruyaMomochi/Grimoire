@@ -76,7 +76,7 @@ namespace Grimoire.Web
 
             app.UseAuthorization();
 
-            app.Map("LineHook", app => app.UseMiddleware<LineVerifyMiddleware>());
+            app.UseMiddleware<LineVerifyMiddleware>();
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
             app.UseGrimoire().UseBot();

@@ -25,6 +25,8 @@ namespace Grimoire.Web.Middleware
             
             var signature = Convert.FromBase64String(request.Headers["x-line-signature"]);
             bool res = await _validator.ValidateSignatureAsync(request.Body, signature);
+            request.Body.Seek(0, System.IO.SeekOrigin.Begin);
+            
             await _next(httpContext);
         }
     }
