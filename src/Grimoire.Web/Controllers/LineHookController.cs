@@ -35,7 +35,6 @@ namespace Grimoire.Web.Controllers
         }
 
         [HttpPost]
-        [ServiceFilter(typeof(ValidateLineWebhookServiceFilter))]
         public async Task<IActionResult> Post(WebhookEvent we)
         {
             foreach (var e in we.Events)

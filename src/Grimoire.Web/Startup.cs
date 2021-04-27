@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Grimoire.Web.Builder;
 using Grimoire.Web.Filters;
+using Grimoire.Web.Middleware;
 using Grimoire.Web.Models;
 using Grimoire.Web.Services;
 using isRock.LineBot;
@@ -75,6 +76,7 @@ namespace Grimoire.Web
 
             app.UseAuthorization();
 
+            app.Map("LineHook", app => app.UseMiddleware<LineVerifyMiddleware>());
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
             app.UseGrimoire().UseBot();

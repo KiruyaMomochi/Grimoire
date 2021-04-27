@@ -39,7 +39,7 @@ namespace Grimoire.Web.Filters
             if (await _validator.ValidateSignatureAsync(request.Body, signature))
                 await next();
             else
-                context.Result = new ForbidResult();
+                context.Result = new BadRequestObjectResult(context.ModelState);
         }
     }
 }
