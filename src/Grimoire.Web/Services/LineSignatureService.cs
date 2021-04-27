@@ -37,11 +37,6 @@ namespace Grimoire.Web.Services
 
         public async Task<bool> ValidateSignatureAsync(Stream stream, byte[] remoteSignature)
         {
-            using var streamReader = new StreamReader(stream);
-            var txt = await streamReader.ReadToEndAsync();
-            Console.WriteLine(txt);
-
-            stream.Seek(0, SeekOrigin.Begin);
             var result = await ValidateSignatureAsync(stream);
             Console.WriteLine(BitConverter.ToString(result));
             Console.WriteLine(BitConverter.ToString(remoteSignature));
