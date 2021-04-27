@@ -31,16 +31,12 @@ namespace Grimoire.Web.Services
         public bool ValidateSignature(Stream stream, ReadOnlySpan<byte> remoteSignature)
         {
             var result = ValidateSignature(stream);
-            Console.WriteLine(BitConverter.ToString(result.ToArray()));
-            Console.WriteLine(BitConverter.ToString(remoteSignature.ToArray()));
             return remoteSignature.SequenceEqual(result);
         }
 
         public async Task<bool> ValidateSignatureAsync(Stream stream, byte[] remoteSignature)
         {
             var result = await ValidateSignatureAsync(stream);
-            Console.WriteLine(BitConverter.ToString(result));
-            Console.WriteLine(BitConverter.ToString(remoteSignature));
             return Utils.Memory.UnsafeCompare(result, remoteSignature);
         }
     }

@@ -27,7 +27,7 @@ namespace Grimoire.Web.Middleware
             using var streamReader = new StreamReader(request.Body);
             { 
                 var txt = await streamReader.ReadToEndAsync();
-                Console.WriteLine(txt);               
+                Console.WriteLine(txt);
                 request.Body.Seek(0, SeekOrigin.Begin);
 
                 var signature = Convert.FromBase64String(request.Headers["x-line-signature"]);
