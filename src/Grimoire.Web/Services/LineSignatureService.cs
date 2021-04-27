@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 
@@ -11,7 +12,7 @@ namespace Grimoire.Web.Services
     {
         public LineSignatureService(IOptions<LineBotOptions> config)
         {
-            var secret = Convert.FromBase64String(config.Value.Secret);
+            var secret = Encoding.UTF8.GetBytes(config.Value.Secret);
             _decrypt = new HMACSHA256(secret);
         }
 
