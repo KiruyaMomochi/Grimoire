@@ -1,8 +1,7 @@
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Grimoire.LineApi.Event;
-using Grimoire.LineApi.Source;
+using Grimoire.Line.Api.Webhook.Source;
 using Grimoire.Web.Builder;
 using Grimoire.Web.Models;
 using Grimoire.Web.Replies;
@@ -11,7 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Grimoire.Web.Commands
 {
-    public class TestSystem : CommandBase
+    public class TestSystem : SystemBase
     {
         private readonly ILogger<TestSystem> _logger;
         private readonly GrimoireContext _context;
@@ -55,7 +54,7 @@ namespace Grimoire.Web.Commands
         {
             return new(new TextReply(
                 JsonSerializer.Serialize(MessageEvent,
-                    new JsonSerializerOptions() {WriteIndented = true})));
+                    new JsonSerializerOptions {WriteIndented = true})));
         }
     }
 }

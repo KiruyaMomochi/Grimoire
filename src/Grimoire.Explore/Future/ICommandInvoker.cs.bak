@@ -1,0 +1,10 @@
+#nullable enable
+using System.Threading.Tasks;
+
+namespace Grimoire.Explore.Abstractions
+{
+    public interface ICommandInvoker
+    {
+        Task InvokeAsync();
+    }
+}

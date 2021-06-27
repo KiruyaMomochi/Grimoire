@@ -37,7 +37,7 @@ namespace Grimoire.Web.Services
         public async Task<bool> ValidateSignatureAsync(Stream stream, byte[] remoteSignature)
         {
             var result = await ValidateSignatureAsync(stream);
-            return Utils.Memory.UnsafeCompare(result, remoteSignature);
+            return Grimoire.Utils.Memory.UnsafeCompare(result, remoteSignature);
         }
     }
 }

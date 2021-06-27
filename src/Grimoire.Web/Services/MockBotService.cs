@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using Grimoire.LineApi.Source;
+using Grimoire.Line.Api.Webhook.Source;
 using isRock.LineBot;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;

@@ -5,14 +5,12 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Grimoire.LineApi;
-using Grimoire.LineApi.Event;
-using Grimoire.Web.Filters;
+using Grimoire.Line.Api.Webhook;
 using Grimoire.Web.Services;
 using isRock.LineBot;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using TextMessage = Grimoire.LineApi.Message.TextMessage;
+using TextMessage = Grimoire.Line.Api.Webhook.Message.TextMessage;
 
 namespace Grimoire.Web.Controllers
 {

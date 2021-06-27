@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Grimoire.LineApi.Source;
+using Grimoire.Line.Api.Webhook.Source;
 using Grimoire.Web.Models;
 
 namespace Grimoire.Web.Services

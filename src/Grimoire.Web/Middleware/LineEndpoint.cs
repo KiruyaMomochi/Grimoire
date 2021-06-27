@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Grimoire.LineApi;
+using Grimoire.Line.Api.Webhook;
 using Grimoire.Web.Services;
 using Microsoft.AspNetCore.Http;
 
@@ -29,7 +29,7 @@ namespace Grimoire.Web.Middleware
         {
             httpContext.Request.EnableBuffering();
             var request = httpContext.Request.Body;
-            
+
             if (!httpContext.Request.Headers.TryGetValue("x-line-signature", out var signatureString))
             {
                 httpContext.Response.StatusCode = StatusCodes.Status403Forbidden;

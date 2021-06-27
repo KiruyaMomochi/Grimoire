@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
-using Grimoire.LineApi.Source;
+using Grimoire.Line.Api.Webhook.Source;
 using isRock.LineBot;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;

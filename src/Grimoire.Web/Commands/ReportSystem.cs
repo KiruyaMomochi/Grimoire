@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Grimoire.LineApi.Source;
+using Grimoire.Line.Api.Webhook.Source;
 using Grimoire.Web.Builder;
 using Grimoire.Web.Models;
 using Grimoire.Web.Replies;
@@ -20,7 +20,7 @@ namespace Grimoire.Web.Commands
     /// </summary>
     /// TODO: Use a global string builder to represent reply message
     /// TODO: add a method that will execute before all the commands
-    public class ReportSystem : CommandBase
+    public class ReportSystem : SystemBase
     {
         private readonly ILogger<ReportSystem> _logger;
         private readonly GrimoireContext _context;

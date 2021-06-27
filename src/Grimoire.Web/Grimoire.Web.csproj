@@ -6,19 +6,27 @@
 
     <ItemGroup>
         <PackageReference Include="LineBotSDK" Version="2.4.32" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.4">
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.7">
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
           <PrivateAssets>all</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="5.0.5" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.4" />
-        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.2" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="5.0.7" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.7" />
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.7" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.4" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\Grimoire.Utils\Grimoire.Utils.csproj" />
-      <ProjectReference Include="..\Grimoire.LineApi\Grimoire.LineApi.csproj" />
+      <ProjectReference Include="..\Grimoire.Line.Api\Grimoire.Line.Api.csproj" />
+      <ProjectReference Include="..\Grimoire.Utils\Grimoire.Utils.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Filters" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="..\..\.editorconfig" Link=".editorconfig" />
     </ItemGroup>
 
 </Project>

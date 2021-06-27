@@ -1,0 +1,9 @@
+namespace Grimoire.Explore.Abstractions
+{
+    public interface ICommandInvokerProvider
+    {
+        int Order { get; }
+        void OnProvidersExecuting(CommandInvokerProviderContext context);
+        void OnProvidersExecuted(CommandInvokerProviderContext context);
+    }
+}

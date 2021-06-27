@@ -4,9 +4,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using Grimoire.LineApi.Event;
-using Grimoire.LineApi.Message;
-using Grimoire.LineApi.Source;
+using Grimoire.Line.Api.Webhook.Event;
+using Grimoire.Line.Api.Webhook.Message;
+using Grimoire.Line.Api.Webhook.Source;
 using Grimoire.Web.Builder;
 using Grimoire.Web.Commands;
 using Grimoire.Web.Common;
@@ -39,7 +39,7 @@ namespace Grimoire.Web.Services
         public void CollectCommands(IServiceCollection services)
         {
             // Find all class that is assignable from commandBase
-            var commandBase = typeof(CommandBase);
+            var commandBase = typeof(SystemBase);
             var assembly = AppDomain.CurrentDomain.GetAssemblies();
             var types = assembly.SelectMany(a => a.GetTypes()).Where(
                 t => commandBase.IsAssignableFrom(t) && !t.IsAbstract);
@@ -81,11 +81,11 @@ namespace Grimoire.Web.Services
             Dictionary<string, CommandActivator> activators)
         {
             var prop = type.GetProperty(nameof(CommandContext), BindingFlags.Public | BindingFlags.Instance);
-            var setter = PropertyHelper.MakeFastPropertySetter<CommandBase>(prop);
+            var setter = PropertyHelper.MakeFastPropertySetter<SystemBase>(prop);
             var factory = ActivatorUtilities.CreateFactory(type, Type.EmptyTypes);
-            var initMethod = type.GetMethod(nameof(CommandBase.OnInitializedAsync),
+            var initMethod = type.GetMethod(nameof(SystemBase.OnInitializedAsync),
                 BindingFlags.Public | BindingFlags.Instance);
-            var afterMethod = type.GetMethod(nameof(CommandBase.OnAfterCommandAsync),
+            var afterMethod = type.GetMethod(nameof(SystemBase.OnAfterCommandAsync),
                 BindingFlags.Public | BindingFlags.Instance);
 
             var activator = new CommandActivator
@@ -124,7 +124,7 @@ namespace Grimoire.Web.Services
                     invokers.Add(command, async (e, a) =>
                     {
                         using var scope = provider.CreateScope();
-                        var service = activator.Factory(scope.ServiceProvider, null) as CommandBase;
+                        var service = activator.Factory(scope.ServiceProvider, null) as SystemBase;
                         activator.SetCommandContext(service, new CommandContext {Event = e, Args = a});
 
                         await activator.OnInitializedAsync(service);
@@ -139,7 +139,7 @@ namespace Grimoire.Web.Services
                     invokers.Add(command, async (e, a) =>
                     {
                         using var scope = provider.CreateScope();
-                        var service = activator.Factory(scope.ServiceProvider, null) as CommandBase;
+                        var service = activator.Factory(scope.ServiceProvider, null) as SystemBase;
                         activator.SetCommandContext(service, new CommandContext {Event = e, Args = a});
 
                         await activator.OnInitializedAsync(service);
@@ -155,7 +155,7 @@ namespace Grimoire.Web.Services
                     invokers.Add(command, async (e, a) =>
                     {
                         using var scope = provider.CreateScope();
-                        var service = activator.Factory(scope.ServiceProvider, null) as CommandBase;
+                        var service = activator.Factory(scope.ServiceProvider, null) as SystemBase;
                         activator.SetCommandContext(service, new CommandContext {Event = e, Args = a});
 
                         await activator.OnInitializedAsync(service);
@@ -170,7 +170,7 @@ namespace Grimoire.Web.Services
                     invokers.Add(command, async (e, a) =>
                     {
                         using var scope = provider.CreateScope();
-                        var service = activator.Factory(scope.ServiceProvider, null) as CommandBase;
+                        var service = activator.Factory(scope.ServiceProvider, null) as SystemBase;
                         activator.SetCommandContext(service, new CommandContext {Event = e, Args = a});
                         
                         await activator.OnInitializedAsync(service);

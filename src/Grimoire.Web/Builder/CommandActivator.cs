@@ -11,12 +11,12 @@ namespace Grimoire.Web.Builder
         public Type Type;
         public MethodInfo Method;
 
-        public delegate Task AsyncLifecycleDelegate(CommandBase service);
+        public delegate Task AsyncLifecycleDelegate(SystemBase service);
         
         public AsyncLifecycleDelegate OnInitializedAsync;
         public AsyncLifecycleDelegate OnAfterCommandAsync;
         
-        public Action<CommandBase, CommandContext> SetCommandContext;
+        public Action<SystemBase, CommandContext> SetCommandContext;
         public ObjectFactory Factory;
     }
 }

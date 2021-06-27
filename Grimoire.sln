@@ -1,15 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31019.194
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31423.177
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grimoire.Web", "src\Grimoire.Web\Grimoire.Web.csproj", "{B963B8F4-45E2-4847-8058-B56E69B940AB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grimoire.LineApi", "src\Grimoire.LineApi\Grimoire.LineApi.csproj", "{3D813F49-F62D-4142-9157-744E7438D7F5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grimoire.Line.Api", "src\Grimoire.Line.Api\Grimoire.Line.Api.csproj", "{3D813F49-F62D-4142-9157-744E7438D7F5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grimoire.LineApi.Tests", "src\Grimoire.LineApi.Tests\Grimoire.LineApi.Tests.csproj", "{6678DA2B-078F-43BF-AF1F-B838DF68E740}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grimoire.Line.Api.Tests", "src\Grimoire.Line.Api.Tests\Grimoire.Line.Api.Tests.csproj", "{6678DA2B-078F-43BF-AF1F-B838DF68E740}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grimoire.Utils", "Grimoire.Utils\Grimoire.Utils.csproj", "{1C1D8A1A-4634-4B5D-8406-83CD04B057D7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grimoire.Utils", "src\Grimoire.Utils\Grimoire.Utils.csproj", "{1C1D8A1A-4634-4B5D-8406-83CD04B057D7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grimoire.Explore", "src\Grimoire.Explore\Grimoire.Explore.csproj", "{8FBC6476-821C-4139-BE9A-CD96C45987F6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{1C1D8A1A-4634-4B5D-8406-83CD04B057D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1C1D8A1A-4634-4B5D-8406-83CD04B057D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1C1D8A1A-4634-4B5D-8406-83CD04B057D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8FBC6476-821C-4139-BE9A-CD96C45987F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8FBC6476-821C-4139-BE9A-CD96C45987F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8FBC6476-821C-4139-BE9A-CD96C45987F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8FBC6476-821C-4139-BE9A-CD96C45987F6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

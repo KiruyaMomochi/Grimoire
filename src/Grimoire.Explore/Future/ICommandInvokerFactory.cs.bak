@@ -1,0 +1,10 @@
+using Grimoire.Explore.Abstractions;
+
+#nullable enable
+namespace Grimoire.Explore.Infrastructure
+{
+    public interface ICommandInvokerFactory
+    {
+        ICommandInvoker? CreateInvoker(CommandContext commandContext);
+    }
+}

@@ -1,0 +1,19 @@
+using System;
+
+#nullable enable
+
+namespace Grimoire.Explore.Abstractions
+{
+    public class CommandInvokerProviderContext
+    {
+        public CommandInvokerProviderContext(CommandContext commandContext)
+        {
+            CommandContext = commandContext
+                             ?? throw new ArgumentNullException(nameof(commandContext));
+        }
+
+        public CommandContext CommandContext { get; }
+        
+        public ICommandInvoker? Result { get; set; }
+    }
+}

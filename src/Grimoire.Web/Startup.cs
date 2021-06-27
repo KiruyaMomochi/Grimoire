@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Grimoire.Web.Builder;
-using Grimoire.Web.Filters;
 using Grimoire.Web.Middleware;
 using Grimoire.Web.Models;
 using Grimoire.Web.Services;
@@ -54,9 +53,8 @@ namespace Grimoire.Web
             services.AddSingleton<UsernameService>();
             services.Configure<LineBotOptions>(Configuration.GetSection(LineBotOptions.LineBot));
             
-            services.AddSingleton<IBotService, BotService>();
+            services.AddSingleton<IBotService, MockBotService>();
             services.AddSingleton<LineSignatureService>();
-            services.AddSingleton<ValidateLineWebhookServiceFilter>();
             services.AddGrimoire();
         }
 

@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using Grimoire.LineApi.Source;
+using Grimoire.Line.Api.Webhook.Source;
 using isRock.LineBot;
 
 namespace Grimoire.Web.Services

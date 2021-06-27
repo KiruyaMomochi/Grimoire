@@ -1,6 +1,6 @@
 using System.Text;
 using System.Threading.Tasks;
-using Grimoire.LineApi.Source;
+using Grimoire.Line.Api.Webhook.Source;
 using Grimoire.Web.Builder;
 using Grimoire.Web.Models;
 using Grimoire.Web.Replies;
@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Grimoire.Web.Commands
 {
-    public class AdminSystem: CommandBase
+    public class AdminSystem: SystemBase
     {
         private readonly ILogger<AdminSystem> _logger;
         private readonly GrimoireContext _context;
