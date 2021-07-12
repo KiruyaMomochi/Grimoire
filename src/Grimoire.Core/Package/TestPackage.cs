@@ -1,33 +1,33 @@
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Grimoire.Data;
+using Grimoire.Data.Models;
+using Grimoire.Explore;
+using Grimoire.Line.Api.Webhook.Event;
 using Grimoire.Line.Api.Webhook.Source;
-using Grimoire.Web.Builder;
-using Grimoire.Web.Models;
-using Grimoire.Web.Replies;
-using Grimoire.Web.Services;
 using Microsoft.Extensions.Logging;
 
-namespace Grimoire.Web.Commands
+namespace Grimoire.Core.Package
 {
-    public class TestSystem : SystemBase
+    public class TestPackage : PackageBase
     {
-        private readonly ILogger<TestSystem> _logger;
-        private readonly GrimoireContext _context;
+        private readonly ILogger<TestPackage> _logger;
+        private readonly GrimoireDatabaseContext _context;
 
-        public TestSystem(ILogger<TestSystem> logger, GrimoireContext context)
+        public TestPackage(ILogger<TestPackage> logger, GrimoireDatabaseContext context)
         {
             _logger = logger;
             _context = context;
         }
 
         [Command("ping", "Ping")]
-        public async Task<TextReply> Ping()
+        public async Task<string> Ping()
         {
             var sb = new StringBuilder();
             sb.AppendLine("Pong.");
 
-            var userId = MessageEvent.Source.UserId;
+            var userId = Event.Source.UserId;
             sb.Append("UserId: ").AppendLine(userId);
             var admin = await _context.Admins.FindAsync(userId);
             if (admin != null)
@@ -35,8 +35,8 @@ namespace Grimoire.Web.Commands
             else
                 sb.AppendLine(" - You are not admin.");
 
-            if (MessageEvent.Source is not GroupSource groupSource)
-                return new TextReply(sb.ToString().TrimEnd());
+            if (Event.Source is not GroupSource groupSource)
+                return sb.ToString().TrimEnd();
 
             var groupId = groupSource.GroupId;
             sb.Append("GroupId: ").AppendLine(groupId);
@@ -46,15 +46,14 @@ namespace Grimoire.Web.Commands
             else
                 sb.AppendLine(" - This group is not allowed.");
 
-            return new TextReply(sb.ToString().TrimEnd());
+            return sb.ToString().TrimEnd();
         }
 
         [Command("raw")]
-        public ValueTask<TextReply> Raw()
+        public string Raw()
         {
-            return new(new TextReply(
-                JsonSerializer.Serialize(MessageEvent,
-                    new JsonSerializerOptions {WriteIndented = true})));
+            return JsonSerializer.Serialize(Event,
+                    new JsonSerializerOptions {WriteIndented = true});
         }
     }
 }

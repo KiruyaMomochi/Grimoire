@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 
+#nullable enable
 namespace Grimoire.Explore
 {
     public class Startup
@@ -17,9 +18,7 @@ namespace Grimoire.Explore
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddGrimoirePackages();
-            services.TryAddSingleton<CommandMatchBuilder>();
-            services.TryAddSingleton<CommandManager>();
+            services.AddGrimoire();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -35,20 +34,12 @@ namespace Grimoire.Explore
             //app.UseEndpoints(endpoints =>
             //{
             //    endpoints.MapGet("/", async context => { await context.Response.WriteAsync("Hello World!"); });
-                
-            //});
-                        //app.Map("/LineHook", builder => builder.UseMiddleware<LineEndpoint>());
 
-            var commandManager = app.ApplicationServices.GetRequiredService<CommandManager>();
-            commandManager.Collect();
-            commandManager.HandleWebhookEvent(new MessageEvent()
-            {
-                Message = new TextMessage()
-                {
-                    Text = "#ping test qwq adjfojdfsao"
-                },
-                Source = new UserSource()
-            }).Wait();
+            //});
+            //app.Map("/LineHook", builder => builder.UseMiddleware<LineEndpoint>());
+
+            app.UseGrimoirePackages();
         }
     }
 }
+#nullable restore

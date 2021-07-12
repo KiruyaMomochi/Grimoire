@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Grimoire.Web.Models
+namespace Grimoire.Data.Models
 {
     public record User
     {

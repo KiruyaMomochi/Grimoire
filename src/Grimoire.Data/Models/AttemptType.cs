@@ -1,4 +1,4 @@
-namespace Grimoire.Web.Models
+namespace Grimoire.Data.Models
 {
     public enum AttemptType
     {

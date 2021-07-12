@@ -59,7 +59,7 @@ namespace Grimoire.Explore
             foreach (var descriptor in collectionProvider.CommandDescriptors)
             {
                 var grimoireContext = new GrimoireContext() { Command = descriptor.Command };
-                var commandContext = new CommandContext(grimoireContext, descriptor);
+                // var commandContext = new CommandContext(grimoireContext, descriptor);
                 // var invoker = commandInvokerFactory.CreateInvoker(commandContext);
                 // invoker.InvokeAsync();
             }

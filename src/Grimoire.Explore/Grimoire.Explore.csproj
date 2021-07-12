@@ -8,4 +8,9 @@
       <ProjectReference Include="..\Grimoire.Line.Api\Grimoire.Line.Api.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Include="Future\CommandContext.cs.bak" />
+      <Compile Include="Future\PackageContext.cs.bak" />
+    </ItemGroup>
+
 </Project>

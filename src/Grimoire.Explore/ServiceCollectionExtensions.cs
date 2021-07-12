@@ -3,16 +3,27 @@ using System;
 using System.Linq;
 using Grimoire.Explore.Abstractions;
 using Grimoire.Explore.ApplicationModels;
+using Grimoire.Explore.CommandRouting;
 using Grimoire.Explore.Infrastructure;
 using Grimoire.Explore.Package;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
+#nullable enable
 namespace Grimoire.Explore
 {
     public static class ServiceCollectionExtensions
     {
+        public static IServiceCollection AddGrimoire(this IServiceCollection services)
+        {
+            services.AddGrimoirePackages();
+            services.TryAddSingleton<CommandMatchBuilder>();
+            services.TryAddSingleton<CommandManager>();
+            
+            return services;
+        }
+    
         public static IServiceCollection AddGrimoirePackages(this IServiceCollection services)
         {
             var partManager = GetApplicationPartManager(services);
@@ -55,3 +66,4 @@ namespace Grimoire.Explore
         }
     }
 }
+#nullable restore

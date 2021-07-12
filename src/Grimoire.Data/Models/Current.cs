@@ -1,6 +1,6 @@
 using System;
 
-namespace Grimoire.Web.Models
+namespace Grimoire.Data.Models
 {
     public record Current
     {

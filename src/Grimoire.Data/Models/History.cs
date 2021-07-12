@@ -1,7 +1,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 
-namespace Grimoire.Web.Models
+namespace Grimoire.Data.Models
 {
     [Index(nameof(Lap), nameof(Order))]
     public record History

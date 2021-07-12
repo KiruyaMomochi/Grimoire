@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Grimoire.Explore.CommandRouting;
 using Grimoire.Explore.Common;
@@ -28,7 +29,7 @@ namespace Grimoire.Explore.Infrastructure
 
         public delegate Task<BaseMessage?> ConvertResultDelegate(object? result);
 
-        public ConvertResultDelegate CreateConvertDelegate(Type returnType)
+        private static ConvertResultDelegate CreateConvertDelegate(Type returnType)
         {
             if (returnType == typeof(string))
                 return result => Task.FromResult<BaseMessage?>(new TextMessage()
@@ -42,26 +43,52 @@ namespace Grimoire.Explore.Infrastructure
                     Text = await (Task<string>) result!
                 };
 
+            if (returnType == typeof(StringBuilder))
+                return result => Task.FromResult<BaseMessage?>(new TextMessage()
+                {
+                    Text = ((StringBuilder) result!).ToString().Trim()
+                });
+
+            if (returnType == typeof(Task<StringBuilder>))
+                return async result => new TextMessage()
+                {
+                    Text = (await (Task<StringBuilder>) result!).ToString().Trim()
+                };
+            
             if (returnType.IsAssignableTo(typeof(BaseMessage)))
                 return result => Task.FromResult((BaseMessage?) result)!;
 
             if (returnType.IsAssignableTo(typeof(Task<BaseMessage>)))
                 return result => (Task<BaseMessage?>) result!;
-            
-            return result => Task.FromResult<BaseMessage?>(null);
+
+            return _ => Task.FromResult<BaseMessage?>(null);
         }
-        
+
+        private enum VariableType
+        {
+            Int,
+            Uint,
+            Unknown
+        }
+
         public LineMessageDelegate CreateInvokeDelegate()
         {
             var packageType = _commandDescriptor.PackageType;
             var packageMethod = _commandDescriptor.Method;
             var len = _commandDescriptor.Parameters.Count;
-            var isInt = _commandDescriptor.Parameters.Select(x => x.ParameterType == typeof(int)).ToArray();
+            var type = _commandDescriptor.Parameters.Select(x =>
+            {
+                if (x.ParameterType == typeof(int)) return VariableType.Int;
+                if (x.ParameterType == typeof(uint)) return VariableType.Uint;
+                return VariableType.Unknown;
+            }).ToArray();
+
             var factory = ActivatorUtilities.CreateFactory(packageType, Array.Empty<Type>());
             var contextSetter =
                 PropertyHelper.MakeFastPropertySetter<PackageBase>(
                     typeof(PackageBase).GetProperty(nameof(PackageBase.GrimoireContext)));
             var convertDelegate = CreateConvertDelegate(packageMethod.ReturnType);
+            var initMethod = packageType.GetDeclaredMethod(nameof(PackageBase.OnInitializedAsync));
 
             return context =>
             {
@@ -69,27 +96,48 @@ namespace Grimoire.Explore.Infrastructure
                 var splitArgs = context.Args.Split((char[]?) null, len + 1,
                     StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
 
+                if (splitArgs.Length < len)
+                    return Task.FromResult<BaseMessage?>(new TextMessage()
+                    {
+                        Text = "Not enough arguments."
+                    });
+
                 for (var i = 0; i < len; i++)
                 {
-                    if (isInt[i])
+                    switch (type[i])
                     {
-                        if (int.TryParse(splitArgs[i], out var res))
-                            parameters[i] = res;
-                        else
-                            return Task.FromResult<BaseMessage?>(new TextMessage
-                            {
-                                Text = $"Failed to parse {splitArgs[i]} to int. Please check your input."
-                            });
+                        case VariableType.Int:
+                            if (int.TryParse(splitArgs[i], out var intRes))
+                                parameters[i] = intRes;
+                            else
+                                return Task.FromResult<BaseMessage?>(new TextMessage
+                                {
+                                    Text = $"Failed to parse {splitArgs[i]} to int. Please check your input."
+                                });
+                            break;
+                        case VariableType.Uint:
+                            if (uint.TryParse(splitArgs[i], out var uintRes))
+                                parameters[i] = uintRes;
+                            else
+                                return Task.FromResult<BaseMessage?>(new TextMessage
+                                {
+                                    Text = $"Failed to parse {splitArgs[i]} to int. Please check your input."
+                                });
+                            break;
+                        case VariableType.Unknown:
+                            parameters[i] = splitArgs[i];
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
                     }
-                    else
-                        parameters[i] = splitArgs[i];
                 }
 
-                context.Args = splitArgs[^1];
+                context.Args = splitArgs.Length == len ? null : splitArgs[^1];
 
-                var packageInstance = factory.Invoke(_provider, null);
+                var packageInstance = factory.Invoke(_provider.CreateScope().ServiceProvider, null);
                 if (packageInstance is PackageBase packageBase)
                     contextSetter(packageBase, context);
+                initMethod?.Invoke(packageInstance, null);
                 var result = packageMethod.Invoke(packageInstance, parameters);
                 return convertDelegate(result);
             };

@@ -8,7 +8,7 @@ namespace Grimoire.Web.Services
 {
     public interface IBotService
     {
-        LineUserInfo GetUserInfo(BaseSource source);
+        string GetUserInfo(BaseSource source);
         void ReplyMessage(string replyToken, string message);
     }
 }

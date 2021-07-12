@@ -11,16 +11,6 @@ using Grimoire.Line.Api.Webhook.Source;
 
 namespace Grimoire.Explore.CommandRouting
 {
-    /// <summary>
-    /// A function that can handle LINE message event.
-    /// </summary>
-    /// <param name="grimoireContext">The <see cref="GrimoireContext"/>for the event.</param>
-    /// <returns>A task that represents the completion of request processing.</returns>
-    /// <example>
-    /// async (context) => Console.WriteLine("Hello World!");
-    /// </example>
-    public delegate Task<Line.Api.Message.BaseMessage?> LineMessageDelegate(GrimoireContext grimoireContext);
-
     public class CommandManager
     {
         private readonly ICommandDescriptorCollectionProvider _descriptorCollectionProvider;
@@ -101,8 +91,9 @@ namespace Grimoire.Explore.CommandRouting
                     Event = e
                 });
 
-                if (result == null) return;
+                if (result == null) break;
                 Console.WriteLine(JsonSerializer.Serialize(result, Options.SerializerOption));
+                break;
             }
         }
     }
