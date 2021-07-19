@@ -73,23 +73,6 @@ namespace Grimoire.Core
             app.UseGrimoirePackages();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
-
-            app.ApplicationServices.GetRequiredService<CommandManager>().HandleWebhookEvent(new MessageEvent()
-            {
-                Message = new TextMessage()
-                {
-                    Text = "#raw 233 test qwq adjfojdfsao"
-                },
-                Source = new UserSource()
-            }).Wait();
-            app.ApplicationServices.GetRequiredService<CommandManager>().HandleWebhookEvent(new MessageEvent()
-            {
-                Message = new TextMessage()
-                {
-                    Text = "#raw 2333333333333333 123 ..."
-                },
-                Source = new UserSource()
-            }).Wait();
         }
     }
 }
