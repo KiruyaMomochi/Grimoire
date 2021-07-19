@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using Grimoire.Explore.Abstractions;
 
-namespace Grimoire.Explore.Infrastructure
+namespace Grimoire.Explore.Abstractions
 {
     public interface ICommandDescriptorCollectionProvider
     {

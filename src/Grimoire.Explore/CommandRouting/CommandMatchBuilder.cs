@@ -14,7 +14,7 @@ namespace Grimoire.Explore.CommandRouting
             _provider = provider;
         }
 
-        private readonly Dictionary<string, List<CommandMatchEntry>> _commandEndpointDict = new();
+        private readonly Dictionary<string, CommandMatchEntrySet> _commandEndpointDict = new();
         private readonly IServiceProvider _provider;
 
         public void Add(CommandDescriptor commandDescriptor)
@@ -25,15 +25,20 @@ namespace Grimoire.Explore.CommandRouting
 
             if (!_commandEndpointDict.TryGetValue(commandDescriptor.Command, out var endpoints))
             {
-                endpoints = new List<CommandMatchEntry>();
+                endpoints = new();
                 _commandEndpointDict[commandDescriptor.Command] = endpoints;
             }
             
             endpoints.Add(new CommandMatchEntry(commandDescriptor, invoker));
         }
 
-        public Dictionary<string, List<CommandMatchEntry>> Build()
+        public Dictionary<string, CommandMatchEntrySet> Build()
         {
+            foreach (var (_, v) in _commandEndpointDict)
+            {
+                v.CommandMatchEntries.Sort();
+            }
+            
             return _commandEndpointDict;
         }
     }

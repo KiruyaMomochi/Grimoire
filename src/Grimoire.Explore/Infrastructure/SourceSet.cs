@@ -1,6 +1,6 @@
 using System;
 
-namespace Grimoire.Explore
+namespace Grimoire.Explore.Infrastructure
 {
     [Flags]
     public enum SourceSet

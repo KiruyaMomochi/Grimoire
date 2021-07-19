@@ -7,6 +7,7 @@ using Grimoire.Data;
 using Grimoire.Data.Models;
 using Grimoire.Explore;
 using Grimoire.Explore.CommandRouting;
+using Grimoire.Explore.Extensions;
 using Grimoire.Line.Api.Webhook.Event;
 using Grimoire.Line.Api.Webhook.Message;
 using Grimoire.Line.Api.Webhook.Source;
@@ -77,7 +78,15 @@ namespace Grimoire.Core
             {
                 Message = new TextMessage()
                 {
-                    Text = "#raw test qwq adjfojdfsao"
+                    Text = "#raw 233 test qwq adjfojdfsao"
+                },
+                Source = new UserSource()
+            }).Wait();
+            app.ApplicationServices.GetRequiredService<CommandManager>().HandleWebhookEvent(new MessageEvent()
+            {
+                Message = new TextMessage()
+                {
+                    Text = "#raw 2333333333333333 123 ..."
                 },
                 Source = new UserSource()
             }).Wait();

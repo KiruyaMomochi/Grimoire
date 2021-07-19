@@ -3,6 +3,7 @@ using Grimoire.Core.Services;
 using Grimoire.Data;
 using Grimoire.Data.Models;
 using Grimoire.Explore;
+using Grimoire.Explore.Attributes;
 using Grimoire.Line.Api.Webhook.Source;
 using Microsoft.Extensions.Logging;
 

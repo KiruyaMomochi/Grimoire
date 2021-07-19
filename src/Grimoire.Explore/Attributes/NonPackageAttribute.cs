@@ -1,6 +1,6 @@
 using System;
 
-namespace Grimoire.Explore
+namespace Grimoire.Explore.Attributes
 {
     [AttributeUsage(AttributeTargets.Class)]
     public class NonPackageAttribute : Attribute

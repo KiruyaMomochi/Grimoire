@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Grimoire.Explore.Attributes;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 
 namespace Grimoire.Explore.Package

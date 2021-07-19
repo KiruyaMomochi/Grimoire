@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Grimoire.Data;
 using Grimoire.Data.Models;
 using Grimoire.Explore;
+using Grimoire.Explore.Attributes;
 using Grimoire.Line.Api.Webhook.Event;
 using Grimoire.Line.Api.Webhook.Source;
 using Microsoft.Extensions.Logging;
@@ -48,12 +49,46 @@ namespace Grimoire.Core.Package
 
             return sb.ToString().TrimEnd();
         }
+        
+        
+        [Command("raw")]
+        public string Raw(int a, int b)
+        {
+            return (a+b).ToString();
+        }
+        
+        [Command("raw")]
+        public string Raw(int a, uint b)
+        {
+            return (a*b).ToString();
+        }
+        [Command("raw")]
+        public string Raw(int a, string b)
+        {
+            return Args;
+        }
+        [Command("raw")]
+        public string Raw(string a, uint b)
+        {
+            return b.ToString();
+        }
 
         [Command("raw")]
-        public string Raw()
+        public string Raw(string a, string b)
         {
-            return JsonSerializer.Serialize(Event,
-                    new JsonSerializerOptions {WriteIndented = true});
+            return Args;
+        }
+
+        [Command("raw")]
+        public string Raw(int rua)
+        {
+            return Args;
+        }
+
+        [Command("raw")]
+        public string Raw(string rua)
+        {
+            return Args;
         }
     }
 }

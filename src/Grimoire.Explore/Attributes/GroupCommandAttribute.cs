@@ -1,6 +1,7 @@
 using System;
+using Grimoire.Explore.Infrastructure;
 
-namespace Grimoire.Explore
+namespace Grimoire.Explore.Attributes
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = false)]
     public class GroupCommandAttribute : CommandAttribute

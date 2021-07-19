@@ -1,11 +1,10 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using Grimoire.Explore.Abstractions;
 
-namespace Grimoire.Explore.Infrastructure
+namespace Grimoire.Explore.Abstractions
 {
-    internal class DefaultCommandDescriptorCollectionProvider: ICommandDescriptorCollectionProvider
+    internal class DefaultCommandDescriptorCollectionProvider : ICommandDescriptorCollectionProvider
     {
         private readonly ICommandDescriptorProvider[] _commandDescriptorProviders;
 

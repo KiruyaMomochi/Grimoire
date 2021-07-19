@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
 #nullable enable
-namespace Grimoire.Explore
+namespace Grimoire.Explore.Extensions
 {
     public static class ApplicationBuilderExtensions
     {

@@ -2,16 +2,15 @@
 using System;
 using System.Linq;
 using Grimoire.Explore.Abstractions;
-using Grimoire.Explore.ApplicationModels;
 using Grimoire.Explore.CommandRouting;
-using Grimoire.Explore.Infrastructure;
+using Grimoire.Explore.Grimoire.Explore.Abstractions;
 using Grimoire.Explore.Package;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
 #nullable enable
-namespace Grimoire.Explore
+namespace Grimoire.Explore.Extensions
 {
     public static class ServiceCollectionExtensions
     {

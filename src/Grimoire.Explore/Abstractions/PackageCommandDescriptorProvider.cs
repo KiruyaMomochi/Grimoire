@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
-using Grimoire.Explore.Abstractions;
+using Grimoire.Explore.Attributes;
 using Grimoire.Explore.Package;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 
-namespace Grimoire.Explore.ApplicationModels
+namespace Grimoire.Explore.Abstractions
 {
     public class PackageCommandDescriptorProvider : ICommandDescriptorProvider
     {

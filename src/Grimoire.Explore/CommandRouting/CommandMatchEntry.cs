@@ -4,7 +4,7 @@ using Grimoire.Explore.Abstractions;
 
 namespace Grimoire.Explore.CommandRouting
 {
-    public class CommandMatchEntry : IEquatable<CommandMatchEntry>
+    public class CommandMatchEntry : IEquatable<CommandMatchEntry>, IComparable<CommandMatchEntry>
     {
         // Reference: ConventionalRouteEntry
 
@@ -17,64 +17,31 @@ namespace Grimoire.Explore.CommandRouting
             LineMessageDelegate = messageDelegate;
         }
 
-        public static bool operator <(CommandMatchEntry? left, CommandMatchEntry? right)
+        public int CompareTo(CommandMatchEntry? other)
         {
-            if (right == null)
-                return false;
-            if (left == null)
-                return true;
+            if (other == null)
+                return -1;
+            
+            var ls = CommandDescriptor.SourceSet;
+            var rs = other.CommandDescriptor.SourceSet;
+            if (ls != rs) return rs - ls; // TODO: which is better?
 
-            var ls = left.CommandDescriptor.SourceSet;
-            var rs = right.CommandDescriptor.SourceSet;
-            if (ls != rs) return ls < rs;
+            var lts = CommandDescriptor.ParameterTypes;
+            var rts = other.CommandDescriptor.ParameterTypes;
+            var lc = lts.Count;
+            var rc = rts.Count;
+            if (lc != rc) return rc - lc;
 
-            var lp = left.CommandDescriptor.Parameters;
-            var rp = right.CommandDescriptor.Parameters;
-            var lc = lp.Count;
-            var rc = rp.Count;
-
-            if (lc != rc) return lc < rc;
-            for (int i = 0; i < lc; i++)
+            for (var i = 0; i < lc; i++)
             {
-                var lt = lp[i].ParameterType;
-                var rt = rp[i].ParameterType;
-                if (lt != typeof(int) && rt == typeof(int))
-                    return false;
-                if (lt == typeof(int) && rt != typeof(int))
-                    return true;
+                var lt = (int) lts[i];
+                var rt = (int) rts[i];
+
+                if (lt != rt)
+                    return lt - rt;
             }
 
-            return false;
-        }
-
-        public static bool operator >(CommandMatchEntry? left, CommandMatchEntry? right)
-        {
-            if (left == null)
-                return false;
-            if (right == null)
-                return true;
-
-            var ls = left.CommandDescriptor.SourceSet;
-            var rs = right.CommandDescriptor.SourceSet;
-            if (ls != rs) return ls > rs;
-
-            var lp = left.CommandDescriptor.Parameters;
-            var rp = right.CommandDescriptor.Parameters;
-            var lc = lp.Count;
-            var rc = rp.Count;
-
-            if (lc != rc) return lc > rc;
-            for (int i = 0; i < lc; i++)
-            {
-                var lt = lp[i].ParameterType;
-                var rt = rp[i].ParameterType;
-                if (lt == typeof(int) && rt != typeof(int))
-                    return false;
-                if (lt != typeof(int) && rt == typeof(int))
-                    return true;
-            }
-
-            return false;
+            return 0;
         }
 
         public bool Equals(CommandMatchEntry? other)

@@ -1,21 +1,50 @@
 ﻿#nullable enable
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Grimoire.Explore.Abstractions;
+using Grimoire.Explore.Extensions;
 using Grimoire.Explore.Infrastructure;
+using Grimoire.Explore.Parameter;
 using Grimoire.Line.Api;
 using Grimoire.Line.Api.Webhook.Event;
 using Grimoire.Line.Api.Webhook.Message;
 using Grimoire.Line.Api.Webhook.Source;
+using BaseMessage = Grimoire.Line.Api.Message.BaseMessage;
 
 namespace Grimoire.Explore.CommandRouting
 {
+    public class CommandMatchEntrySet
+    {
+        public List<CommandMatchEntry> CommandMatchEntries { get; set; } = new List<CommandMatchEntry>();
+        public int MaxParametersCount { get; set; }
+
+        public int Count => CommandMatchEntries.Count;
+
+        public CommandMatchEntry this[int i]
+        {
+            get => CommandMatchEntries[i];
+            set => CommandMatchEntries[i] = value;
+        }
+        
+        public void Add(CommandMatchEntry commandMatchEntry)
+        {
+            CommandMatchEntries.Add(commandMatchEntry);
+
+            var count = commandMatchEntry.CommandDescriptor.Parameters.Count;
+            if (count > MaxParametersCount) MaxParametersCount = count;
+        }
+    }
+
     public class CommandManager
     {
         private readonly ICommandDescriptorCollectionProvider _descriptorCollectionProvider;
         private readonly CommandMatchBuilder _commandMatchBuilder;
-        private Dictionary<string, List<CommandMatchEntry>> _commandEndpointDict = new();
+        private Dictionary<string, CommandMatchEntrySet> _commandEndpointDict = new();
         private readonly char _startSymbol = '#';
 
         public CommandManager(ICommandDescriptorCollectionProvider descriptorCollectionProvider,
@@ -38,14 +67,14 @@ namespace Grimoire.Explore.CommandRouting
         private static (string? command, string? args) SplitText(string? text)
         {
             if (text == null)
-                return (null, null);
-            var tokens = text.Split((char[]?) null, 2,
-                StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+                return (null, string.Empty);
+            var tokens = text.Split(new[] {' ', '　', '\n'}, 2,
+                StringSplitOptions.RemoveEmptyEntries);
             return tokens.Length switch
             {
                 0 => (null, null),
-                1 => (tokens[0], null),
-                2 => (tokens[0], tokens[1]),
+                1 => (tokens[0].Trim(), null),
+                2 => (tokens[0].Trim(), tokens[1]),
                 _ => throw new IndexOutOfRangeException()
             };
         }
@@ -56,45 +85,43 @@ namespace Grimoire.Explore.CommandRouting
             if (!textMessage.Text.StartsWith(_startSymbol))
                 return;
 
-            // _logger?.LogInformation("{TextMessage}", textMessage.ToString());
             var (command, args) = SplitText(textMessage.Text[1..]);
             if (command == null) return;
 
-            //var messageDelegate = _commandEndpointDict[new CommandRouteEntry(command, e.Source.SourceType)];
-            // LineMessageDelegate messageDelegate =
-            //     _commandEndpointDict[new CommandMatchEntry(command, e.Source.SourceType)];
             if (!_commandEndpointDict.TryGetValue(command, out var entries)) return;
-            foreach (var entry in entries)
+            BaseMessage? result = null;
+
+            var messageParametersDescriptor = new MessageParametersDescriptor(args, entries.MaxParametersCount);
+
+            foreach (var entry in entries.CommandMatchEntries)
             {
-                switch (e.Source.SourceType)
+                if (!entry.CommandDescriptor.HasSourceType(e.Source.SourceType))
+                    continue;
+
+                var parameterTypes = entry.CommandDescriptor.ParameterTypes!;
+
+                object[] parameters = Array.Empty<object>();
+                if (parameterTypes.Count != 0)
                 {
-                    case SourceType.User:
-                        if ((entry.CommandDescriptor.SourceSet & SourceSet.User) == 0)
-                            continue;
-                        break;
-                    case SourceType.Group:
-                        if ((entry.CommandDescriptor.SourceSet & SourceSet.Group) == 0)
-                            continue;
-                        break;
-                    case SourceType.Room:
-                        if ((entry.CommandDescriptor.SourceSet & SourceSet.Room) == 0)
-                            continue;
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
+                    parameters = new object[parameterTypes.Count];
+                    if (!messageParametersDescriptor.TryBuildParameters(parameterTypes, parameters))
+                        continue;
                 }
-                
-                var result = await entry.LineMessageDelegate(new GrimoireContext()
+
+                result = await entry.LineMessageDelegate(new GrimoireContext
                 {
                     Command = command,
-                    Args = args,
+                    RealArgs = parameters,
+                    Args = messageParametersDescriptor.BuildRemainParameters(args, parameters.Length),
                     Event = e
                 });
 
-                if (result == null) break;
-                Console.WriteLine(JsonSerializer.Serialize(result, Options.SerializerOption));
                 break;
             }
+
+            if (result == null) return;
+            // TODO: Send result
+            Console.WriteLine(JsonSerializer.Serialize(result, Options.SerializerOption));
         }
     }
 }

@@ -1,4 +1,5 @@
 using Grimoire.Explore.CommandRouting;
+using Grimoire.Explore.Extensions;
 using Grimoire.Line.Api.Webhook.Event;
 using Grimoire.Line.Api.Webhook.Message;
 using Grimoire.Line.Api.Webhook.Source;
